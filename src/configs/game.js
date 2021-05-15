@@ -21,11 +21,6 @@ export class Game extends Phaser.Game {
     window.addEventListener("resize", this._resize.bind(this));
     this._setScalingMode();
     this._loadAssets();
-
-    setInterval(() => {
-      console.warn("res");
-      this._resize();
-    }, 100);
   }
 
   _loadAssets() {

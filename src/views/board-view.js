@@ -31,7 +31,7 @@ export class BoardView extends Phaser2Grid {
   _build() {
     super.build(this.getGridConfig());
     this._setBounds();
-    this._drawBounds();
+    // this._drawBounds();
     this._buildSin();
     this._buildCos();
     this._buildTg();

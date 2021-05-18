@@ -1,5 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
+import { ParticleExample } from "./examples/particle-example";
 
 export class BoardView extends Phaser2Grid {
   constructor(game) {
@@ -9,7 +10,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   getBounds() {
-    return new Phaser.Rectangle(9, 0, 750, 750);
+    return new Phaser.Rectangle(0, 0, 750, 750);
   }
 
   getGridConfig() {
@@ -17,22 +18,18 @@ export class BoardView extends Phaser2Grid {
   }
 
   rebuild() {
-    this._circle && this._circle.destroy();
     super.rebuild(this.getGridConfig());
   }
 
   update() {
-    //
+    this._example.update();
   }
 
   _build() {
     super.build(this.getGridConfig());
-    this._setBounds();
     // this._drawBounds();
-  }
 
-  _setBounds() {
-    // set bounds for groups like sin, cos, tg, ctg
+    this._buildExample();
   }
 
   _drawBounds() {
@@ -43,6 +40,11 @@ export class BoardView extends Phaser2Grid {
     gr.drawRect(x, y, width, height);
     gr.endFill();
 
-    this.setChild("scene", gr);
+    this.setChild("example", gr);
+  }
+
+  _buildExample() {
+    this._example = new ParticleExample(this.game);
+    this.setChild("example", this._example);
   }
 }

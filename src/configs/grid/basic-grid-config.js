@@ -1,7 +1,7 @@
-export function getBoardGridLandscapeConfig() {
+export function getBasicGridLandscapeConfig() {
   return {
     // debug: { color: 0x00ff00 },
-    name: "board",
+    name: "basic",
     bounds: {
       x: 0,
       y: 0,
@@ -10,17 +10,17 @@ export function getBoardGridLandscapeConfig() {
     },
     cells: [
       {
-        name: "example",
+        name: "cell",
         bounds: { x: 0, y: 0, width: 1, height: 1 }
       }
     ]
   };
 }
 
-export function getBoardGridPortraitConfig() {
+export function getBasicGridPortraitConfig() {
   return {
     // debug: { color: 0x00ff00 },
-    name: "board",
+    name: "basic",
     bounds: {
       x: 0,
       y: 0,
@@ -29,7 +29,7 @@ export function getBoardGridPortraitConfig() {
     },
     cells: [
       {
-        name: "example",
+        name: "cell",
         bounds: { x: 0, y: 0, width: 1, height: 1 }
       }
     ]

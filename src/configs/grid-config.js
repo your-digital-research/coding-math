@@ -1,5 +1,9 @@
 import { LP } from "../utils";
 import {
+  getBasicGridLandscapeConfig,
+  getBasicGridPortraitConfig
+} from "./grid/basic-grid-config";
+import {
   getBoardGridLandscapeConfig,
   getBoardGridPortraitConfig
 } from "./grid/board-grid-config";
@@ -14,4 +18,8 @@ export function getMainGridConfig() {
 
 export function getBoardGridConfig() {
   return LP(getBoardGridLandscapeConfig, getBoardGridPortraitConfig).call(null);
+}
+
+export function getBasicGridConfig() {
+  return LP(getBasicGridLandscapeConfig, getBasicGridPortraitConfig).call(null);
 }

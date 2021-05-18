@@ -1,11 +1,7 @@
 export class Vector {
   constructor(x, y) {
-    //
-
     this._x = x;
     this._y = y;
-    // this._angle = Math.atan2(this._y, this._x);
-    // this._length = Math.sqrt(Math.pow(this._x, 2) + Math.pow(this._y, 2));
   }
 
   get x() {

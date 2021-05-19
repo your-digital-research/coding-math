@@ -30,6 +30,10 @@ export class Particle {
     this._velocity.addTo(accel);
   }
 
+  rotate(angle) {
+    this._position.angle = angle;
+  }
+
   update() {
     this._velocity.addTo(this._gravity);
     this._position.addTo(this._velocity);

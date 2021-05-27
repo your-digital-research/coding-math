@@ -1,6 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
-import { NormalizationExample } from "./examples/normalization-example";
+import { HandlingEdgeExample } from "./examples/handling-edge-example";
 
 export class BoardView extends Phaser2Grid {
   constructor(game) {
@@ -22,7 +22,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   update() {
-    //
+    this._example.update();
   }
 
   _build() {
@@ -44,7 +44,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   _buildExample() {
-    this._example = new NormalizationExample(this.game);
+    this._example = new HandlingEdgeExample(this.game);
     this.setChild("example", this._example);
   }
 }

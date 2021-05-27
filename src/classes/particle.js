@@ -1,18 +1,28 @@
 import { Vector } from "./vector";
 
 export class Particle {
-  constructor(x = 0, y = 0, speed = 0, direction = 0, gravity = 0) {
+  constructor(x = 0, y = 0, radius = 0, speed = 0, direction = 0, gravity = 0) {
     this._mass = 1;
+    this._bounce = -1;
+    this._radius = radius;
     this._position = new Vector(x, y);
     this._velocity = new Vector(0, 0);
 
     this._velocity.length = speed;
     this._velocity.angle = direction;
-    // this._gravity = gravity ? new Vector(0, gravity) : new Vector(0, 0);
+    this._gravity = gravity ? new Vector(0, gravity) : new Vector(0, 0);
   }
 
   get mass() {
     return this._mass;
+  }
+
+  get bounce() {
+    return this._bounce;
+  }
+
+  get radius() {
+    return this._radius;
   }
 
   get position() {
@@ -25,6 +35,14 @@ export class Particle {
 
   set mass(value) {
     this._mass = value;
+  }
+
+  set bounce(value) {
+    this._bounce = value;
+  }
+
+  set radius(value) {
+    this._radius = value;
   }
 
   set position(value) {
@@ -68,7 +86,7 @@ export class Particle {
   }
 
   update() {
-    // this._velocity.addTo(this._gravity);
+    this._velocity.addTo(this._gravity);
     this._position.addTo(this._velocity);
   }
 }

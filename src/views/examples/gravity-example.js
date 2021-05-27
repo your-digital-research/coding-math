@@ -6,19 +6,15 @@ export class GravityExample extends Phaser2Grid {
   constructor(game) {
     super(game);
 
-    this._sun = new Particle(0, 0, 0, 0);
+    this._sun = new Particle(0, 0, 40, 0, 0);
     this._sun.mass = 1700;
 
-    this._earth = new Particle(100, 0, 5, -Math.PI / 2);
-    this._mars = new Particle(150, 0, 4, -Math.PI / 2);
+    this._earth = new Particle(100, 0, 10, 5, -Math.PI / 2);
+    this._mars = new Particle(150, 0, 15, 4, -Math.PI / 2);
 
     this._galaxy = new Phaser.Group(this.game);
 
     this._build();
-  }
-
-  getBounds() {
-    return new Phaser.Rectangle(-375, -375, 750, 750);
   }
 
   getGridConfig() {
@@ -67,7 +63,7 @@ export class GravityExample extends Phaser2Grid {
     this._sunShape = this.game.add.graphics();
 
     this._sunShape.beginFill(0xffff00);
-    this._sunShape.drawCircle(x, y, 40);
+    this._sunShape.drawCircle(x, y, this._sun.radius);
     this._sunShape.endFill();
 
     this._galaxy.addChild(this._sunShape);
@@ -78,7 +74,7 @@ export class GravityExample extends Phaser2Grid {
     this._earthShape = this.game.add.graphics();
 
     this._earthShape.beginFill(0x0000ff);
-    this._earthShape.drawCircle(x, y, 10);
+    this._earthShape.drawCircle(x, y, this._earth.radius);
     this._earthShape.endFill();
 
     this._galaxy.addChild(this._earthShape);
@@ -89,7 +85,7 @@ export class GravityExample extends Phaser2Grid {
     this._marsShape = this.game.add.graphics();
 
     this._marsShape.beginFill(0xff0000);
-    this._marsShape.drawCircle(x, y, 15);
+    this._marsShape.drawCircle(x, y, this._mars.radius);
     this._marsShape.endFill();
 
     this._galaxy.addChild(this._marsShape);

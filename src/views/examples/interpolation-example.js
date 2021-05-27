@@ -9,10 +9,6 @@ export class InterpolationExample extends Phaser2Grid {
     this._build();
   }
 
-  getBounds() {
-    return new Phaser.Rectangle(-500, -375, 1000, 750);
-  }
-
   getGridConfig() {
     return getBasicGridConfig();
   }
@@ -65,9 +61,10 @@ export class InterpolationExample extends Phaser2Grid {
 
   _buildCircle() {
     const { height } = this.getBounds();
-    const x = 0; //lerp(this._t, this._minX, this._maxX);
-    const y = 0; //lerp(this._t, this._minY, this._maxY);
+    const x = 0; // lerp(this._t, this._minX, this._maxX);
+    const y = 0; // lerp(this._t, this._minY, this._maxY);
     // const radius = lerp(this._t, this._minRadius, this._maxRadius);
+
     const radius = map(
       this.game.input.activePointer.y,
       0,
@@ -79,7 +76,7 @@ export class InterpolationExample extends Phaser2Grid {
     this._shape = this.game.add.graphics();
     this._shape.beginFill(0x000000, 1);
     this._shape.drawCircle(x, y, radius);
-    this._shape.alpha = 1; //lerp(this._t, this._minAlpha, this._maxAlpha);
+    this._shape.alpha = 1; // lerp(this._t, this._minAlpha, this._maxAlpha);
     this._shape.endFill();
 
     this._area.addChild(this._shape);

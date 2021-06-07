@@ -17,3 +17,7 @@ export const lerp = (norm, min, max) => {
 export const map = (value, sourceMin, sourceMax, destMin, destMax) => {
   return lerp(norm(value, sourceMin, sourceMax), destMin, destMax);
 };
+
+export const clamp = (value, min, max) => {
+  return Math.min(Math.max(value, min), max);
+};

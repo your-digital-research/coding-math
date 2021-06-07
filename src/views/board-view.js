@@ -1,6 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
-import { FrictionExample } from "./examples/friction-example";
+import { PythagoreanExample } from "./examples/pythagorean-example";
 export class BoardView extends Phaser2Grid {
   constructor(game) {
     super(game);
@@ -43,7 +43,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   _buildExample() {
-    this._example = new FrictionExample(this.game);
+    this._example = new PythagoreanExample(this.game);
     this.setChild("example", this._example);
   }
 }

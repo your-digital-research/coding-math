@@ -4,6 +4,7 @@ export class Particle {
   constructor(x = 0, y = 0, radius = 0, speed = 0, direction = 0, gravity = 0) {
     this._mass = 1;
     this._bounce = -1;
+    this._friction = 1;
     this._radius = radius;
     this._position = new Vector(x, y);
     this._velocity = new Vector(0, 0);
@@ -19,6 +20,10 @@ export class Particle {
 
   get bounce() {
     return this._bounce;
+  }
+
+  get friction() {
+    return this._friction;
   }
 
   get radius() {
@@ -39,6 +44,10 @@ export class Particle {
 
   set bounce(value) {
     this._bounce = value;
+  }
+
+  set friction(value) {
+    this._friction = value;
   }
 
   set radius(value) {
@@ -86,6 +95,7 @@ export class Particle {
   }
 
   update() {
+    this._velocity.multiplyBy(this._friction);
     this._velocity.addTo(this._gravity);
     this._position.addTo(this._velocity);
   }

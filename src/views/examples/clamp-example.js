@@ -17,10 +17,17 @@ export class ClampExample extends Phaser2Grid {
 
   rebuild() {
     super.rebuild(this.getGridConfig());
+    this._rebuildComponents();
   }
 
   update() {
     this._updateCircle();
+  }
+
+  _rebuildComponents() {
+    this.removeChildren();
+    this._buildBox();
+    this._buildCircle();
   }
 
   _setBounds() {
@@ -62,10 +69,12 @@ export class ClampExample extends Phaser2Grid {
   }
 
   _buildCircle(x = 0, y = 0) {
+    const { innerWidth, innerHeight } = window;
     this._circle = this.game.add.graphics();
     this._circle.beginFill(0xa9a9a9a, 1);
     this._circle.drawCircle(0, 0, 30);
     this._circle.endFill();
+    this._circle.position.set(innerWidth / 2, innerHeight / 2);
 
     this.addChild(this._circle);
   }

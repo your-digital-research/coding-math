@@ -58,7 +58,6 @@ export class ClampExample extends Phaser2Grid {
     this._box.endFill();
     this._box.position.set(innerWidth / 2 - 200, innerHeight / 2 - 100);
 
-    console.warn(this._box.x, this._box.y, this._box.width, this._box.height);
     this.addChild(this._box);
   }
 

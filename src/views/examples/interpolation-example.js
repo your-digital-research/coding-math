@@ -7,6 +7,7 @@ export class InterpolationExample extends Phaser2Grid {
     super(game);
     this._init();
     this._build();
+    this.game.input.maxPointers = 1;
   }
 
   getGridConfig() {

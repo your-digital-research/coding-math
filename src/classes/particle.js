@@ -38,6 +38,10 @@ export class Particle {
     return this._velocity;
   }
 
+  get gravity() {
+    return this._gravity;
+  }
+
   set mass(value) {
     this._mass = value;
   }
@@ -60,6 +64,10 @@ export class Particle {
 
   set velocity(value) {
     this._velocity = value;
+  }
+
+  set gravity(value) {
+    this._gravity = new Vector(0, value);
   }
 
   accelerate(accel) {

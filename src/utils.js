@@ -63,3 +63,11 @@ export const rectangleIntersect = (rectangle1, rectangle2) => {
     rangeIntersect(y1, y1 + h1, y2, y2 + h2)
   );
 };
+
+export const randomRange = (min, max) => {
+  return min + Math.random() * (max - min);
+};
+
+export const randomInt = (min, max) => {
+  return Math.floor(min + Math.random() * (max - min + 1));
+};

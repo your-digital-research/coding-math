@@ -1,7 +1,7 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { Particle } from "../../classes/particle";
 import { getBasicGridConfig } from "../../configs/grid-config";
-import { clamp } from "../../utils";
+import { clamp, map } from "../../utils";
 
 export class BallisticsExample extends Phaser2Grid {
   constructor(game) {
@@ -23,7 +23,7 @@ export class BallisticsExample extends Phaser2Grid {
   }
 
   update() {
-    this._updateBall();
+    this._isShooting ? this._updateBall() : this._updateBar();
   }
 
   _onMouseDown(event) {
@@ -35,7 +35,7 @@ export class BallisticsExample extends Phaser2Grid {
   _onKeyDown(event) {
     switch (event.keyCode) {
       case 32: // space
-        this._canShoot && this._shoot();
+        !this._isShooting && this._shoot();
         break;
 
       default:
@@ -58,18 +58,6 @@ export class BallisticsExample extends Phaser2Grid {
     this._draw();
   }
 
-  _setBounds() {
-    const { innerWidth, innerHeight } = window;
-    this._area.getBounds = () => {
-      return new Phaser.Rectangle(
-        -innerWidth / 2,
-        -innerHeight / 2,
-        innerWidth,
-        innerHeight
-      );
-    };
-  }
-
   _drawBounds() {
     const { x, y, width, height } = this._area.getBounds();
 
@@ -82,21 +70,19 @@ export class BallisticsExample extends Phaser2Grid {
   }
 
   _init() {
-    this._canShoot = true;
+    this._rawForce = 0;
+    this._forceAngle = 0;
+    this._forceSpeed = 0.1;
+    this._isShooting = false;
     this.game.input.maxPointers = 1;
-    this._area = new Phaser.Group(this.game);
   }
 
   _build() {
     super.build(this.getGridConfig());
-    this._setBounds();
-    // this._drawBounds();
 
     this._draw();
     this._buildBall();
     this._buildBallShape(this._ball.x, this._ball.y);
-
-    this.setChild("cell", this._area);
   }
 
   _aimGun(mouseX, mouseY) {
@@ -112,14 +98,16 @@ export class BallisticsExample extends Phaser2Grid {
     this.removeChild(this._gun);
     this._buildGun(angle);
     this._buildArc();
+    this._buildBar();
   }
 
   _shoot() {
     this._ball.gravity = 0.2;
     this._ball.velocity.length = 20;
+    this._ball.velocity.length = map(this._rawForce, -1, 1, 10, 30);
     this._ball.velocity.angle = (this._gun.angle * Math.PI) / 180;
 
-    this._canShoot = false;
+    this._isShooting = true;
   }
 
   _updateBall() {
@@ -130,12 +118,19 @@ export class BallisticsExample extends Phaser2Grid {
     this._buildBallShape(x, y);
   }
 
+  _updateBar() {
+    this._forceAngle += this._forceSpeed;
+    this._rawForce = Math.sin(this._forceAngle);
+    this._buildFill();
+  }
+
   _checkForEdges() {
     const { x, y } = this._ball.position;
     const { innerWidth, innerHeight } = window;
-    if (x > innerWidth || x < 0 || y > innerHeight || y < 0) {
-      this._canShoot = true;
+    if (x > innerWidth + 30 || x < -30 || y > innerHeight + 30 || y < -30) {
+      this._isShooting = false;
       this._resetBall();
+      this._resetFill();
     }
   }
 
@@ -146,6 +141,11 @@ export class BallisticsExample extends Phaser2Grid {
     this._ball.velocity.angle = (angle * Math.PI) / 180;
     this._ball.position.x = x;
     this._ball.position.y = y;
+  }
+
+  _resetFill() {
+    this._forceAngle = -1;
+    this._buildFill();
   }
 
   _buildGun(angle = -15) {
@@ -184,5 +184,28 @@ export class BallisticsExample extends Phaser2Grid {
     this._ballShape.position.set(x, y);
 
     this.addChild(this._ballShape);
+  }
+
+  _buildBar() {
+    const { innerHeight } = window;
+    this._bar = this.game.add.graphics();
+    this._bar.beginFill(0xc9c9c9, 1);
+    this._bar.drawRect(0, 0, 150, 30);
+    this._bar.endFill();
+    this._bar.position.set(30, innerHeight - 100);
+
+    this.addChild(this._bar);
+  }
+
+  _buildFill() {
+    this.removeChild(this._fill);
+    const { innerHeight } = window;
+    this._fill = this.game.add.graphics();
+    this._fill.beginFill(0x999999, 1);
+    this._fill.drawRect(0, 0, map(this._rawForce, -1, 1, 0, 150), 30);
+    this._fill.endFill();
+    this._fill.position.set(30, innerHeight - 100);
+
+    this.addChild(this._fill);
   }
 }

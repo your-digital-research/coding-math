@@ -71,3 +71,11 @@ export const randomRange = (min, max) => {
 export const randomInt = (min, max) => {
   return Math.floor(min + Math.random() * (max - min + 1));
 };
+
+export const degreesToRadians = (degrees) => {
+  return (degrees / 180) * Math.PI;
+};
+
+export const radiansToDegrees = (radians) => {
+  return (radians * 180) / Math.PI;
+};

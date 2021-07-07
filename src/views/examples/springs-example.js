@@ -2,6 +2,7 @@ import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { Particle } from "../../classes/particle";
 import { Vector } from "../../classes/vector";
 import { getBasicGridConfig } from "../../configs/grid-config";
+import { randomRange } from "../../utils";
 
 export class SpringsExample extends Phaser2Grid {
   constructor(game) {
@@ -21,6 +22,7 @@ export class SpringsExample extends Phaser2Grid {
 
   update() {
     const distance = this._springPoint.subtract(this._weight.position);
+    distance.length -= this._springLength;
     const springForce = distance.multiply(this._k);
 
     this._springPoint.x = this.game.input.activePointer.x;
@@ -38,13 +40,15 @@ export class SpringsExample extends Phaser2Grid {
   _init() {
     const { innerWidth, innerHeight } = window;
     this._k = 0.05;
+    this._springLength = 100;
     this._springPoint = new Vector(innerWidth / 2, innerHeight / 2);
     this._weight = new Particle(
-      Math.random() * innerWidth,
-      Math.random() * innerHeight,
-      40,
-      50,
-      Math.random() * Math.PI * 2
+      randomRange(innerWidth / 4, innerWidth),
+      randomRange(0, innerHeight),
+      randomRange(20, 40),
+      randomRange(50, 100),
+      randomRange(0, Math.PI * 2),
+      0.2
     );
     this._weight.friction = 0.95;
   }

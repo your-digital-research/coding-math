@@ -1,7 +1,7 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
-import { Particle } from "../../classes/particle";
+import { ParticleOptimized } from "../../classes/particle-optimized";
 import { getBasicGridConfig } from "../../configs/grid-config";
-import { clamp, map } from "../../utils";
+import { circleCollision, clamp, map, randomRange } from "../../utils";
 
 export class BallisticsExample extends Phaser2Grid {
   constructor(game) {
@@ -9,7 +9,7 @@ export class BallisticsExample extends Phaser2Grid {
 
     this._init();
     this._build();
-    document.body.addEventListener("mousedown", this._onMouseDown.bind(this));
+
     document.body.addEventListener("keydown", this._onKeyDown.bind(this));
   }
 
@@ -23,13 +23,17 @@ export class BallisticsExample extends Phaser2Grid {
   }
 
   update() {
-    this._isShooting ? this._updateBall() : this._updateBar();
-  }
+    this._aimGun(
+      this.game.input.activePointer.x,
+      this.game.input.activePointer.y
+    );
 
-  _onMouseDown(event) {
-    document.body.addEventListener("mousemove", this._onMouseMove.bind(this));
-    document.body.addEventListener("mouseup", this._onMouseUp.bind(this));
-    this._aimGun(event.clientX, event.clientY);
+    if (this._isShooting) {
+      this._updateBall();
+      this._checkTarget();
+    } else {
+      this._updateBar();
+    }
   }
 
   _onKeyDown(event) {
@@ -55,6 +59,7 @@ export class BallisticsExample extends Phaser2Grid {
 
   _rebuildComponents() {
     this.removeChildren();
+    this._build();
     this._draw();
   }
 
@@ -81,7 +86,10 @@ export class BallisticsExample extends Phaser2Grid {
     super.build(this.getGridConfig());
 
     this._draw();
+    this._buildArc();
+    this._buildBar();
     this._buildBall();
+    this._buildTarget();
     this._buildBallShape(this._ball.x, this._ball.y);
   }
 
@@ -97,25 +105,45 @@ export class BallisticsExample extends Phaser2Grid {
   _draw(angle) {
     this.removeChild(this._gun);
     this._buildGun(angle);
-    this._buildArc();
-    this._buildBar();
   }
 
   _shoot() {
+    const force = map(this._rawForce, -1, 1, 10, 30);
+
     this._ball.gravity = 0.2;
-    this._ball.velocity.length = 20;
-    this._ball.velocity.length = map(this._rawForce, -1, 1, 10, 30);
-    this._ball.velocity.angle = (this._gun.angle * Math.PI) / 180;
+    this._ball.x = this._gun.x + Math.cos(this._gun.rotation) * 40;
+    this._ball.y = this._gun.y + Math.sin(this._gun.rotation) * 40;
+    this._ball.vx = Math.cos(this._gun.rotation) * force;
+    this._ball.vy = Math.sin(this._gun.rotation) * force;
 
     this._isShooting = true;
   }
 
   _updateBall() {
-    const { x, y } = this._ball.position;
+    const { x, y } = this._ball;
+
     this._ball.update();
-    this.removeChild(this._ballShape);
+    this._ballShape.position.set(x, y);
+
     this._checkForEdges();
-    this._buildBallShape(x, y);
+  }
+
+  _checkTarget() {
+    const { x: x1, y: y1, width: d1 } = this._target;
+    const { x: x2, y: y2, width: d2 } = this._ballShape;
+
+    if (circleCollision(x1, y1, d1 / 2, x2, y2, d2 / 2)) {
+      this.removeChild(this._target);
+      this.removeChild(this._ballShape);
+
+      this._target = null;
+      this._isShooting = false;
+
+      this._resetBall();
+      this._resetFill();
+      this._buildTarget();
+      this._buildBallShape(this._ball.x, this._ball.y);
+    }
   }
 
   _updateBar() {
@@ -125,22 +153,27 @@ export class BallisticsExample extends Phaser2Grid {
   }
 
   _checkForEdges() {
-    const { x, y } = this._ball.position;
+    const { x, y } = this._ball;
     const { innerWidth, innerHeight } = window;
+
     if (x > innerWidth + 30 || x < -30 || y > innerHeight + 30 || y < -30) {
+      this.removeChild(this._ballShape);
+
       this._isShooting = false;
       this._resetBall();
       this._resetFill();
+      this._buildBallShape(this._ball.x, this._ball.y);
     }
   }
 
   _resetBall() {
-    const { x, y, angle } = this._gun;
+    const { x, y } = this._gun;
+
+    this._ball.y = y;
+    this._ball.x = x;
+    this._ball.vx = 0;
+    this._ball.vy = 0;
     this._ball.gravity = 0;
-    this._ball.velocity.length = 0;
-    this._ball.velocity.angle = (angle * Math.PI) / 180;
-    this._ball.position.x = x;
-    this._ball.position.y = y;
   }
 
   _resetFill() {
@@ -150,6 +183,7 @@ export class BallisticsExample extends Phaser2Grid {
 
   _buildGun(angle = -15) {
     const { innerHeight } = window;
+
     this._gun = this.game.add.graphics();
     this._gun.beginFill(0x000000, 1);
     this._gun.drawRect(-25, -25, 150, 50);
@@ -162,6 +196,7 @@ export class BallisticsExample extends Phaser2Grid {
 
   _buildArc() {
     const { innerHeight } = window;
+
     this._arc = this.game.add.graphics();
     this._arc.beginFill(0x000000, 1);
     this._arc.drawCircle(0, 0, 150);
@@ -173,7 +208,28 @@ export class BallisticsExample extends Phaser2Grid {
 
   _buildBall() {
     const { innerHeight } = window;
-    this._ball = new Particle(100, innerHeight - 200, 17, 0, this._gun.angle);
+
+    this._ball = new ParticleOptimized(
+      100,
+      innerHeight - 200,
+      0,
+      this._gun.angle
+    );
+  }
+
+  _buildTarget() {
+    const { innerWidth } = window;
+
+    this._target = this.game.add.graphics();
+    this._target.beginFill(0xff0000, 1);
+    this._target.drawCircle(0, 0, 50);
+    this._target.endFill();
+    this._target.position.set(
+      randomRange(500, innerWidth),
+      randomRange(200, 700)
+    );
+
+    this.addChild(this._target);
   }
 
   _buildBallShape(x, y) {
@@ -188,6 +244,7 @@ export class BallisticsExample extends Phaser2Grid {
 
   _buildBar() {
     const { innerHeight } = window;
+
     this._bar = this.game.add.graphics();
     this._bar.beginFill(0xc9c9c9, 1);
     this._bar.drawRect(0, 0, 150, 30);
@@ -199,7 +256,9 @@ export class BallisticsExample extends Phaser2Grid {
 
   _buildFill() {
     this.removeChild(this._fill);
+
     const { innerHeight } = window;
+
     this._fill = this.game.add.graphics();
     this._fill.beginFill(0x999999, 1);
     this._fill.drawRect(0, 0, map(this._rawForce, -1, 1, 0, 150), 30);

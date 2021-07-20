@@ -1,6 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
-import { RoundingExample } from "./examples/rounding-example";
+import { BallisticsExample } from "./examples/ballistics-example";
 export class BoardView extends Phaser2Grid {
   constructor(game) {
     super(game);
@@ -43,7 +43,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   _buildExample() {
-    this._example = new RoundingExample(this.game);
+    this._example = new BallisticsExample(this.game);
     this.setChild("example", this._example);
   }
 }

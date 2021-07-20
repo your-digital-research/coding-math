@@ -79,3 +79,12 @@ export const degreesToRadians = (degrees) => {
 export const radiansToDegrees = (radians) => {
   return (radians * 180) / Math.PI;
 };
+
+export const roundToPlaces = (value, places) => {
+  const power = Math.pow(10, places);
+  return Math.round(value * power) / power;
+};
+
+export const roundToNearest = (value, nearest) => {
+  return Math.round(value / nearest) * nearest;
+};

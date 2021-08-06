@@ -113,8 +113,8 @@ export class BallisticsExample extends Phaser2Grid {
     this._ball.gravity = 0.2;
     this._ball.x = this._gun.x + Math.cos(this._gun.rotation) * 40;
     this._ball.y = this._gun.y + Math.sin(this._gun.rotation) * 40;
-    this._ball.vx = Math.cos(this._gun.rotation) * force;
-    this._ball.vy = Math.sin(this._gun.rotation) * force;
+    this._ball.speed = force;
+    this._ball.heading = this._gun.rotation;
 
     this._isShooting = true;
   }

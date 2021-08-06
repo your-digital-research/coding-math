@@ -7,6 +7,8 @@ export class ParticleOptimized {
     this._bounce = -1;
     this._friction = 1;
     this._gravity = gravity;
+    this._springs = [];
+    this._gravitations = [];
     this._vx = Math.cos(direction) * speed;
     this._vy = Math.sin(direction) * speed;
   }
@@ -55,6 +57,22 @@ export class ParticleOptimized {
     return this._gravity;
   }
 
+  get springs() {
+    return this._springs;
+  }
+
+  get gravitations() {
+    return this._gravitations;
+  }
+
+  get speed() {
+    return Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+  }
+
+  get heading() {
+    return Math.atan2(this.vy, this.vx);
+  }
+
   set x(value) {
     this._x = value;
   }
@@ -99,6 +117,50 @@ export class ParticleOptimized {
     this._gravity = value;
   }
 
+  set speed(value) {
+    const heading = this.heading;
+    this.vx = Math.cos(heading) * value;
+    this.vy = Math.sin(heading) * value;
+  }
+
+  set heading(value) {
+    const speed = this.speed;
+    this.vx = Math.cos(value) * speed;
+    this.vy = Math.sin(value) * speed;
+  }
+
+  addGravitation(point) {
+    this.removeGravitation(point);
+    this.gravitations.push(point);
+  }
+
+  removeGravitation(point) {
+    this.gravitations.forEach((gravitation, index) => {
+      if (gravitation === point) {
+        this.gravitations.splice(index, 1);
+        return;
+      }
+    });
+  }
+
+  addSpring(point, k, length) {
+    this.removeSpring(point);
+    this.springs.push({
+      point: point,
+      k: k,
+      length: length
+    });
+  }
+
+  removeSpring(point) {
+    this.springs.forEach((spring, index) => {
+      if (spring === point) {
+        this.springs.slice(index, 1);
+        return;
+      }
+    });
+  }
+
   accelerate(ax, ay) {
     this._vx += ax;
     this._vy += ay;
@@ -132,7 +194,32 @@ export class ParticleOptimized {
     this._vy += ay;
   }
 
+  springTo(point, k, length) {
+    const dx = point.x - this.x;
+    const dy = point.y - this.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const springForce = (distance - length || 0) * k;
+
+    this.vx += (dx / distance) * springForce;
+    this.vy += (dy / distance) * springForce;
+  }
+
+  handleSprings() {
+    this.springs.forEach((spring) => {
+      this.springTo(spring.point, spring.k, spring.length);
+    });
+  }
+
+  handleGravitations() {
+    this.gravitations.forEach((point) => {
+      this.gravityTo(point);
+    });
+  }
+
   update() {
+    this.handleSprings();
+    this.handleGravitations();
+
     this._vx *= this._friction;
     this._vy *= this._friction;
     this._vy += this._gravity;

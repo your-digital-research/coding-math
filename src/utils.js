@@ -98,3 +98,29 @@ export const randomDist = (min, max, iterations) => {
 
   return Math.floor(total / iterations);
 };
+
+export const quadraticBezier = (p1, p2, p3, t, pFinal) => {
+  const final = pFinal || {};
+
+  final.x = Math.pow(1 - t, 2) * p1.x + (1 - t) * 2 * t * p2.x + t * t * p3.x;
+  final.y = Math.pow(1 - t, 2) * p1.y + (1 - t) * 2 * t * p2.y + t * t * p3.y;
+
+  return final;
+};
+
+export const cubicBezier = (p1, p2, p3, p4, t, pFinal) => {
+  const final = pFinal || {};
+
+  final.x =
+    Math.pow(1 - t, 3) * p1.x +
+    Math.pow(1 - t, 2) * 3 * t * p2.x +
+    (1 - t) * 3 * t * t * p3.x +
+    t * t * t * p4.x;
+  final.y =
+    Math.pow(1 - t, 3) * p1.y +
+    Math.pow(1 - t, 2) * 3 * t * p2.y +
+    (1 - t) * 3 * t * t * p3.y +
+    t * t * t * p4.y;
+
+  return final;
+};

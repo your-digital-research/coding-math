@@ -88,3 +88,13 @@ export const roundToPlaces = (value, places) => {
 export const roundToNearest = (value, nearest) => {
   return Math.round(value / nearest) * nearest;
 };
+
+export const randomDist = (min, max, iterations) => {
+  let total = 0;
+
+  for (let i = 0; i < iterations; i++) {
+    total += randomRange(min, max);
+  }
+
+  return Math.floor(total / iterations);
+};

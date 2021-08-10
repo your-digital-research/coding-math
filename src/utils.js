@@ -124,3 +124,24 @@ export const cubicBezier = (p1, p2, p3, p4, t, pFinal) => {
 
   return final;
 };
+
+export const multiCurve = (points, context) => {
+  let p1, p2, midX, midY;
+
+  context.moveTo(points[0].x, points[0].y);
+
+  for (var i = 1; i < points.length - 2; i += 1) {
+    p1 = points[i];
+    p2 = points[i + 1];
+
+    midX = (p1.x + p2.x) / 2;
+    midY = (p1.y + p2.y) / 2;
+
+    context.quadraticCurveTo(p1.x, p1.y, midX, midY);
+  }
+
+  p1 = points[points.length - 2];
+  p2 = points[points.length - 1];
+
+  context.quadraticCurveTo(p1.x, p1.y, p2.x, p2.y);
+};

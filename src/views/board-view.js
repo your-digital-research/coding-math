@@ -1,6 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
-import { RandomDistributionExtended } from "./examples/random-distribution-extended-example";
+import { MultiCurvesExample } from "./examples/multi-curves-example";
 export class BoardView extends Phaser2Grid {
   constructor(game) {
     super(game);
@@ -43,7 +43,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   _buildExample() {
-    this._example = new RandomDistributionExtended(this.game);
+    this._example = new MultiCurvesExample(this.game);
     this.setChild("example", this._example);
   }
 }

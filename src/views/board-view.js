@@ -1,6 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
-import { BitmapCollisionExample } from "./examples/bitmap-collision-example";
+import { PostcardsInSpaceExample } from "./examples/postcards-in-space-example";
 export class BoardView extends Phaser2Grid {
   constructor(game) {
     super(game);
@@ -43,7 +43,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   _buildExample() {
-    this._example = new BitmapCollisionExample(this.game);
+    this._example = new PostcardsInSpaceExample(this.game);
     this.setChild("example", this._example);
   }
 }

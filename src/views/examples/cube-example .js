@@ -43,16 +43,26 @@ export class CubeExample extends Phaser2Grid {
   _onKeyDown(event) {
     switch (event.keyCode) {
       case 37: // left
-        this._translateModel(-20, 0, 0);
+        if (event.ctrlKey) {
+          this._rotateY(0.05);
+        } else {
+          this._translateModel(-20, 0, 0);
+        }
         this._buildPoints();
         break;
       case 39: // right
-        this._translateModel(20, 0, 0);
+        if (event.ctrlKey) {
+          this._rotateY(-0.05);
+        } else {
+          this._translateModel(20, 0, 0);
+        }
         this._buildPoints();
         break;
       case 38: // up
         if (event.shiftKey) {
           this._translateModel(0, 0, 20);
+        } else if (event.ctrlKey) {
+          this._rotateX(0.05);
         } else {
           this._translateModel(0, -20, 0);
         }
@@ -61,6 +71,8 @@ export class CubeExample extends Phaser2Grid {
       case 40: // down
         if (event.shiftKey) {
           this._translateModel(0, 0, -20);
+        } else if (event.ctrlKey) {
+          this._rotateX(-0.05);
         } else {
           this._translateModel(0, 20, 0);
         }
@@ -83,16 +95,17 @@ export class CubeExample extends Phaser2Grid {
 
   _init() {
     this._points = [
-      { x: -500, y: -500, z: 1000, sx: null, sy: null },
-      { x: 500, y: -500, z: 1000, sx: null, sy: null },
-      { x: 500, y: -500, z: 500, sx: null, sy: null },
       { x: -500, y: -500, z: 500, sx: null, sy: null },
-      { x: -500, y: 500, z: 1000, sx: null, sy: null },
-      { x: 500, y: 500, z: 1000, sx: null, sy: null },
+      { x: 500, y: -500, z: 500, sx: null, sy: null },
+      { x: 500, y: -500, z: -500, sx: null, sy: null },
+      { x: -500, y: -500, z: -500, sx: null, sy: null },
+      { x: -500, y: 500, z: 500, sx: null, sy: null },
       { x: 500, y: 500, z: 500, sx: null, sy: null },
-      { x: -500, y: 500, z: 500, sx: null, sy: null }
+      { x: 500, y: 500, z: -500, sx: null, sy: null },
+      { x: -500, y: 500, z: -500, sx: null, sy: null }
     ];
 
+    this._centerZ = 2500;
     this._pointsShapes = [];
     this._focalLength = 300;
     this._updateNeeded = true;
@@ -102,11 +115,58 @@ export class CubeExample extends Phaser2Grid {
   _projectPoints() {
     for (let i = 0; i < this._points.length; i += 1) {
       const point = this._points[i];
-      const scale = this._focalLength / (this._focalLength + this._points[i].z);
+      const scale =
+        this._focalLength /
+        (this._focalLength + this._points[i].z + this._centerZ);
 
       point.sx = point.x * scale;
       point.sy = point.y * scale;
     }
+  }
+
+  _rotateX(angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    this._points.forEach((point) => {
+      const y = point.y * cos - point.z * sin;
+      const z = point.z * cos + point.y * sin;
+
+      point.y = y;
+      point.z = z;
+    });
+
+    this._updateNeeded = true;
+  }
+
+  _rotateY(angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    this._points.forEach((point) => {
+      const x = point.x * cos - point.z * sin;
+      const z = point.z * cos + point.x * sin;
+
+      point.x = x;
+      point.z = z;
+    });
+
+    this._updateNeeded = true;
+  }
+
+  _rotateZ(angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    this._points.forEach((point) => {
+      const x = point.x * cos - point.y * sin;
+      const y = point.y * cos + point.x * sin;
+
+      point.x = x;
+      point.y = y;
+    });
+
+    this._updateNeeded = true;
   }
 
   _drawLine() {
@@ -114,7 +174,7 @@ export class CubeExample extends Phaser2Grid {
     const { innerWidth, innerHeight } = window;
 
     const gr = this.game.add.graphics();
-    gr.lineStyle(1, 0x000000, 1);
+    gr.lineStyle(2, 0x000000, 1);
     gr.moveTo(point.sx, point.sy);
 
     for (let i = 1; i < arguments.length; i += 1) {
@@ -140,11 +200,12 @@ export class CubeExample extends Phaser2Grid {
 
     this._points.forEach((rectangle) => {
       const { x, y } = rectangle;
-      const perspective = this._focalLength / (this._focalLength + rectangle.z);
+      const perspective =
+        this._focalLength / (this._focalLength + rectangle.z + this._centerZ);
       const gr = this.game.add.graphics();
 
       gr.beginFill(0x000000, 1);
-      gr.drawCircle(0, 0, 20);
+      gr.drawCircle(0, 0, 0);
       gr.endFill();
 
       gr.scale.set(perspective);

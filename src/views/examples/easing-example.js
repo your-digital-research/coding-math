@@ -7,6 +7,8 @@ export class EasingExample extends Phaser2Grid {
 
     this._init();
     this._build();
+
+    this.game.input.onDown.add(() => (this._easing = true));
   }
 
   getGridConfig() {
@@ -18,7 +20,7 @@ export class EasingExample extends Phaser2Grid {
   }
 
   update() {
-    this._updateCirclePosition();
+    this._easing && this._updateCirclePosition();
   }
 
   _updateCirclePosition() {
@@ -26,22 +28,34 @@ export class EasingExample extends Phaser2Grid {
     this._target.x = x;
     this._target.y = y;
 
-    const dx = this._target.x - this._position.x;
-    const dy = this._target.y - this._position.y;
-    const vx = dx * this._ease;
-    const vy = dy * this._ease;
-
-    this._position.x += vx;
-    this._position.y += vy;
+    this._easing = this._easeTo(this._position, this._target, this._ease);
 
     const { x: newX, y: newY } = this._position;
 
     this._circle.position.set(newX, newY);
   }
 
+  _easeTo(position, target, ease) {
+    const dx = target.x - position.x;
+    const dy = target.y - position.y;
+
+    position.x += dx * ease;
+    position.y += dy * ease;
+
+    if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+      position.x = target.x;
+      position.y = target.y;
+
+      return false;
+    }
+
+    return true;
+  }
+
   _init() {
     const { innerWidth, innerHeight } = window;
     this._ease = 0.1;
+    this._easing = true;
 
     this._target = {
       x: innerWidth / 2,

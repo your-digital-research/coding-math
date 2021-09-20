@@ -100,18 +100,20 @@ export class LineIntersectionExample extends Phaser2Grid {
 
   _intersect() {
     const { p1, p2, p3, p4 } = this._points;
-    const intersectionPoint = this._lineIntersect(p1, p2, p3, p4);
-    const { x, y } = intersectionPoint;
+    const intersectionPoint = this._segmentIntersect(p1, p2, p3, p4);
+    if (intersectionPoint) {
+      const { x, y } = intersectionPoint;
 
-    const gr = this.game.add.graphics();
+      const gr = this.game.add.graphics();
 
-    gr.beginFill(0x000000, 1);
-    gr.drawCircle(0, 0, 50);
-    gr.endFill();
+      gr.beginFill(0x000000, 1);
+      gr.drawCircle(0, 0, 50);
+      gr.endFill();
 
-    gr.position.set(x, y);
+      gr.position.set(x, y);
 
-    this.addChild((this._intersectionPoint = gr));
+      this.addChild((this._intersectionPoint = gr));
+    }
   }
 
   _draw() {
@@ -143,10 +145,49 @@ export class LineIntersectionExample extends Phaser2Grid {
 
     const denominator = A1 * B2 - A2 * B1;
 
+    if (denominator === 0) {
+      return null;
+    }
+
     return {
       x: (B2 * C1 - B1 * C2) / denominator,
       y: (A1 * C2 - A2 * C1) / denominator
     };
+  }
+
+  _segmentIntersect(p1, p2, p3, p4) {
+    const A1 = p2.y - p1.y;
+    const B1 = p1.x - p2.x;
+    const C1 = A1 * p1.x + B1 * p1.y;
+
+    const A2 = p4.y - p3.y;
+    const B2 = p3.x - p4.x;
+    const C2 = A2 * p3.x + B2 * p3.y;
+
+    const denominator = A1 * B2 - A2 * B1;
+
+    if (denominator === 0) {
+      return null;
+    }
+
+    const intersectX = (B2 * C1 - B1 * C2) / denominator;
+    const intersectY = (A1 * C2 - A2 * C1) / denominator;
+    const rx1 = (intersectX - p1.x) / (p2.x - p1.x);
+    const ry1 = (intersectY - p1.y) / (p2.y - p1.y);
+    const rx2 = (intersectX - p3.x) / (p4.x - p3.x);
+    const ry2 = (intersectY - p3.y) / (p4.y - p3.y);
+
+    if (
+      ((rx1 >= 0 && rx1 <= 1) || (ry1 >= 0 && ry1 <= 1)) &&
+      ((rx2 >= 0 && rx2 <= 1) || (ry2 >= 0 && ry2 <= 1))
+    ) {
+      return {
+        x: intersectX,
+        y: intersectY
+      };
+    } else {
+      return null;
+    }
   }
 
   _onDown() {

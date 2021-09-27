@@ -18,7 +18,7 @@ export class KochExample extends Phaser2Grid {
   }
 
   update() {
-    //
+    this._draw();
   }
 
   _init() {
@@ -38,10 +38,22 @@ export class KochExample extends Phaser2Grid {
       x: innerWidth / 2 - 278,
       y: innerHeight / 2 + 160
     };
+
+    this._a = 0;
+    this._t = null;
   }
 
   _build() {
     super.build(this.getGridConfig());
+
+    // this._koch(this._p1, this._p2, 3);
+    // this._koch(this._p2, this._p3, 3);
+    // this._koch(this._p3, this._p1, 3);
+  }
+
+  _draw() {
+    this._t = 1 / 3 + (Math.sin((this._a += 0.02)) * 1) / 6;
+    this.removeChildren();
 
     this._koch(this._p1, this._p2, 3);
     this._koch(this._p2, this._p3, 3);
@@ -56,16 +68,16 @@ export class KochExample extends Phaser2Grid {
     const angle = Math.atan2(dy, dx);
 
     const pA = {
-      x: p1.x + dx / 3,
-      y: p1.y + dy / 3
+      x: p1.x + dx * this._t, // / 3,
+      y: p1.y + dy * this._t // / 3
     };
     const pC = {
-      x: p2.x - dx / 3,
-      y: p2.y - dy / 3
+      x: p2.x - dx * this._t, // / 3,
+      y: p2.y - dy * this._t // / 3
     };
     const pB = {
-      x: pA.x + Math.cos(angle - Math.PI / 3) * unit,
-      y: pA.y + Math.sin(angle - Math.PI / 3) * unit
+      x: pA.x + Math.cos(angle - Math.PI * this._t) * unit, // Math.PI / 3
+      y: pA.y + Math.sin(angle - Math.PI * this._t) * unit // Math.PI / 3
     };
 
     if (limit > 0) {

@@ -1,7 +1,7 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBasicGridConfig } from "../../configs/grid-config";
 
-export class KochExample extends Phaser2Grid {
+export class KochAnimatedExample extends Phaser2Grid {
   constructor(game) {
     super(game);
 
@@ -18,7 +18,7 @@ export class KochExample extends Phaser2Grid {
   }
 
   update() {
-    //
+    this._draw();
   }
 
   _init() {
@@ -37,6 +37,8 @@ export class KochExample extends Phaser2Grid {
       y: 160
     };
 
+    this._a = 0;
+    this._t = null;
     this._area = new Phaser.Group(this.game);
   }
 
@@ -64,6 +66,15 @@ export class KochExample extends Phaser2Grid {
     this._setBounds();
     this._drawBounds();
 
+    // this._koch(this._p1, this._p2, 3);
+    // this._koch(this._p2, this._p3, 3);
+    // this._koch(this._p3, this._p1, 3);
+  }
+
+  _draw() {
+    this._t = 1 / 3 + (Math.sin((this._a += 0.02)) * 1) / 6;
+    this._area.removeChildren();
+
     this._koch(this._p1, this._p2, 3);
     this._koch(this._p2, this._p3, 3);
     this._koch(this._p3, this._p1, 3);
@@ -77,16 +88,16 @@ export class KochExample extends Phaser2Grid {
     const angle = Math.atan2(dy, dx);
 
     const pA = {
-      x: p1.x + dx / 3,
-      y: p1.y + dy / 3
+      x: p1.x + dx * this._t,
+      y: p1.y + dy * this._t
     };
     const pC = {
-      x: p2.x - dx / 3,
-      y: p2.y - dy / 3
+      x: p2.x - dx * this._t,
+      y: p2.y - dy * this._t
     };
     const pB = {
-      x: pA.x + Math.cos(angle - Math.PI / 3) * unit,
-      y: pA.y + Math.sin(angle - Math.PI / 3) * unit
+      x: pA.x + Math.cos(angle - Math.PI * this._t) * unit,
+      y: pA.y + Math.sin(angle - Math.PI * this._t) * unit
     };
 
     if (limit > 0) {

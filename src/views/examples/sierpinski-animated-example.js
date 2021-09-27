@@ -1,7 +1,7 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBasicGridConfig } from "../../configs/grid-config";
 
-export class SierpinskiExample extends Phaser2Grid {
+export class SierpinskiAnimatedExample extends Phaser2Grid {
   constructor(game) {
     super(game);
 
@@ -18,7 +18,7 @@ export class SierpinskiExample extends Phaser2Grid {
   }
 
   update() {
-    //
+    this._draw();
   }
 
   _init() {
@@ -28,7 +28,7 @@ export class SierpinskiExample extends Phaser2Grid {
     };
 
     this._p2 = {
-      x: +278,
+      x: 278,
       y: 160
     };
 
@@ -37,6 +37,11 @@ export class SierpinskiExample extends Phaser2Grid {
       y: 160
     };
 
+    this._a = 0;
+    this._b = 0;
+    this._r = 0;
+    this._tx = null;
+    this._ty = null;
     this._area = new Phaser.Group(this.game);
   }
 
@@ -64,22 +69,33 @@ export class SierpinskiExample extends Phaser2Grid {
     this._setBounds();
     this._drawBounds();
 
-    this._sierpinski(this._p1, this._p2, this._p3, 5);
+    // this._sierpinski(this._p1, this._p2, this._p3, 5);
+  }
+
+  _draw() {
+    this._area.removeChildren();
+    this._area.rotation = this._r += 0.01;
+    this._a >= Math.PI && (this._a = 0);
+    this._b >= Math.PI && (this._b = 0);
+    this._tx = 0.5 * Math.sin((this._a += 0.05)) * 1;
+    this._ty = 0.5 * Math.sin((this._b += 0.05)) * 1;
+
+    this._sierpinski(this._p1, this._p2, this._p3, 4);
   }
 
   _sierpinski(p1, p2, p3, limit) {
     if (limit > 0) {
       const pA = {
-        x: (p1.x + p2.x) / 2,
-        y: (p1.y + p2.y) / 2
+        x: p1.x + (p2.x - p1.x) * this._tx,
+        y: p1.y + (p2.y - p1.y) * this._ty
       };
       const pB = {
-        x: (p2.x + p3.x) / 2,
-        y: (p2.y + p3.y) / 2
+        x: p2.x + (p3.x - p2.x) * this._tx,
+        y: p2.y + (p3.y - p2.y) * this._ty
       };
       const pC = {
-        x: (p3.x + p1.x) / 2,
-        y: (p3.y + p1.y) / 2
+        x: p3.x + (p1.x - p3.x) * this._tx,
+        y: p3.y + (p1.y - p3.y) * this._ty
       };
 
       this._sierpinski(p1, pA, pC, limit - 1);

@@ -1,6 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
-import { SierpinskiExample } from "./examples/sierpinski-example";
+import { KochExample } from "./examples/koch-example";
 export class BoardView extends Phaser2Grid {
   constructor(game) {
     super(game);
@@ -43,7 +43,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   _buildExample() {
-    this._example = new SierpinskiExample(this.game);
+    this._example = new KochExample(this.game);
     this.setChild("example", this._example);
   }
 }

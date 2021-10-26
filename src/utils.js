@@ -6,6 +6,14 @@ export const loopRunnable = (game, delay, runnable, context, ...args) => {
   return game.time.events.loop(delay, runnable, context, ...args);
 };
 
+export const delayRunnable = (game, delay, runnable, context, ...args) => {
+  return game.time.events.add(delay, runnable, context, ...args);
+};
+
+export const removeRunnable = (game, runnable) => {
+  return game.time.events.remove(runnable);
+};
+
 export const norm = (value, min, max) => {
   return (value - min) / (max - min);
 };

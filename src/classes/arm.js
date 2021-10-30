@@ -83,7 +83,7 @@ export class Arm {
     const dx = x - this._x;
     const dy = y - this._y;
 
-    this._angle = Math.atan(dy, dx);
+    this._angle = Math.atan2(dy, dx);
   }
 
   drag(x, y) {

@@ -1,6 +1,6 @@
 import { Phaser2Grid } from "@armathai/phaser2-grid";
 import { getBoardGridConfig } from "../configs/grid-config";
-import { AspectRatioExample } from "./examples/aspect-ratio-example";
+import { BoxLayoutExample } from "./examples/box-layout-example";
 export class BoardView extends Phaser2Grid {
   constructor(game) {
     super(game);
@@ -43,7 +43,7 @@ export class BoardView extends Phaser2Grid {
   }
 
   _buildExample() {
-    this._example = new AspectRatioExample(this.game);
+    this._example = new BoxLayoutExample(this.game);
     this.setChild("example", this._example);
   }
 }

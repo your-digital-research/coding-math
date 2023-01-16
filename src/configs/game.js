@@ -31,7 +31,7 @@ export class Game extends Phaser.Game {
     setTimeout(() => {
       this._mainView = new MainView(this);
       this.stage.addChild(this._mainView);
-    }, 0);
+    }, 1000);
   }
 
   _resize() {
@@ -43,7 +43,7 @@ export class Game extends Phaser.Game {
       this.scale.scaleMode = Phaser.ScaleManager.RESIZE;
       this.scale.pageAlignHorizontally = true;
       this.scale.pageAlignVertically = true;
-    }, 0);
+    }, 1000);
   }
 }
 

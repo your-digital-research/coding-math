@@ -19,7 +19,7 @@ Explore a variety of math examples implemented with PhacerCE. Each example provi
 
 ## <a name="getting-started"></a> Getting Started
 
-To get started with the project, follow these simple steps:
+To dive into the examples and learn more about the mathematical concepts, follow these simple steps:
 
 1. **Install Node Modules**
    ```bash

@@ -22,7 +22,7 @@ Explore a variety of math examples implemented with PhacerCE. Each example provi
 
 To dive into the examples and learn more about the mathematical concepts, follow these simple steps:
 
-2. **Navigate to the Project directory**
+1. **Navigate to the Project directory**
    ```bash
    cd Project/
 2. **Install Node Modules**

@@ -21,24 +21,27 @@ Explore a variety of math examples implemented with PhacerCE. Each example provi
 
 To dive into the examples and learn more about the mathematical concepts, follow these simple steps:
 
-1. **Install Node Modules**
+2. **Navigate to the Project directory**
+   ```bash
+   cd Project/
+2. **Install Node Modules**
    ```bash
    npm install
-2. **Install Node Version**
+3. **Install Node Version**
    ```bash
    nvm install 16
-3. **Set Node Version**
+4. **Set Node Version**
    ```bash
    nvm use 16
-4. **Start the Project**
+5. **Start the Project**
    ```bash
    npm start
-5. **Open in Browser**
+6. **Open in Browser**
    - Open your preferred web browser and navigate to the specified address (typically http://localhost:8080 or http://0.0.0.0:8080/).
-6. **To Change Example**
+7. **To Change Example**
    - Open **board-view.js**
    - Change **_buildExample()** function by assigning new example to **this._example**
-7. **Examples Location**
+8. **Examples Location**
    - Examples are located in **src/view/examples** directory
 
 ## <a name="license"></a> License
